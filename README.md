@@ -3,17 +3,17 @@
 Use [`rancher-compose`](http://docs.rancher.com/rancher/rancher-compose/) from
 [Ansible](https://www.ansible.com/).  This repository defines an
 [Ansible module](http://docs.ansible.com/ansible/modules.html) called
-`rancher_compose` which is designed allow the management of
-[stacks](http://docs.rancher.com/rancher/concepts/#stacks) in a
+`rancher_compose` which is designed to allow the management of
+[Rancher stacks](http://docs.rancher.com/rancher/concepts/#stacks) in a
 [Rancher environment](http://docs.rancher.com/rancher/concepts/#environments).
 It does this by invoking the `rancher-compose` tool.
 
 ## Installation
 
 Download and save the module file `rancher_compose.py` to a directory Ansible
-recognises as being a module library.  This directory can be:
+recognises as being a module library path.  This directory can be:
 
-* The default library path specified by your Ansible installation
+* The default library path specified by your Ansible installation.
 
 * A path specified by the `--module-path` option to either the `ansible` or
   `ansible-playbook` commands.
@@ -29,8 +29,8 @@ recognises as being a module library.  This directory can be:
 Unless a `docker-compose.yml` file is specified in the `COMPOSE_FILE`
 environment variable then `rancher_compose` requires that the `docker_compose`
 option point to a `docker-compose.yml` file.  Unless provided by the appropriate
-environment variable, the `url`, `access_key` and `secret_key` options must also
-be populated.  Note that environment variables can be specified in the file
+environment variables, the `url`, `access_key` and `secret_key` options must
+also be defined.  Note that environment variables can be defined in the file
 pointed to by the `env_file` option.
 
 The Rancher stack is manipulated by setting the `state` option
