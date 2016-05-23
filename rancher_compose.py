@@ -18,6 +18,7 @@
 ##
 
 import datetime
+import os.path
 
 DOCUMENTATION = '''
 ---
@@ -33,6 +34,11 @@ description:
     directory in which the playbook resides.  Note that for the purposes of this
     module, the words I(stack) and I(project) are synonymous.
 options:
+  project_dir:
+    description:
+      - The working directory under which C(rancher-compose) will run
+    required: false
+    default: The current working directory
   project:
     description:
       - The rancher stack to operate on
@@ -41,7 +47,7 @@ options:
   docker_compose:
     description:
       - The location of the C(docker-compose.yml) file
-    required: true
+    required: false
     default: None
   rancher_compose:
     description:
@@ -173,8 +179,9 @@ def main():
     # Declare the module arguments.
     module = AnsibleModule(
         argument_spec = dict(
+            project_dir = dict(type='str', default='.'),
             project = dict(),
-            docker_compose = dict(required=True),
+            docker_compose = dict(),
             rancher_compose = dict(),
             env_file = dict(),
             url = dict(),
@@ -189,6 +196,7 @@ def main():
     )
 
     # Define the module arguments.
+    project_dir = os.path.abspath(module.params['project_dir'])
     project = module.params['project']
     docker_compose = module.params['docker_compose']
     rancher_compose = module.params['rancher_compose']
@@ -200,7 +208,9 @@ def main():
     state = module.params['state']
 
     # Set the global rancher-compose command line arguments.
-    args = [executable, '--file', docker_compose]
+    args = [executable]
+    if docker_compose:
+        args.extend(['--file', docker_compose])
     if project:
         args.extend(['--project-name', project])
     if rancher_compose:
@@ -230,7 +240,7 @@ def main():
 
     # Run rancher-compose.
     startd = datetime.datetime.now()
-    rc, out, err = module.run_command(args, executable)
+    rc, out, err = module.run_command(args, executable, cwd=project_dir)
     endd = datetime.datetime.now()
     delta = endd - startd
 
