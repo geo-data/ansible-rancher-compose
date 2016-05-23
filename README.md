@@ -73,6 +73,33 @@ appropriately. e.g.:
     state: started
 ```
 
+Note that you can also use Ansible's `environment` keyword to set environment
+variables which are made available for
+[variable interpolation](http://docs.rancher.com/rancher/latest/en/rancher-compose/environment-interpolation/)
+in `rancher-compose.yml` and `docker-compose.yml` files e.g running:
+
+```
+- rancher_compose:
+    docker_compose: "/tmp/docker-compose.yml"
+    url: http://rancher-server:8080
+    access_key: 62883FB58840FB83D016
+    secret_key: BCZLqYsrmbxnw4jR6e7iy56cb9qViWayq7Yhnw9C
+    state: present
+  environment:
+    IMAGE_TAG: 14.04
+```
+
+with the contents of `/tmp/docker-compose.yml` as follows:
+
+```
+ubuntu:
+  tty: true
+  image: ubuntu:$IMAGE_TAG
+  stdin_open: true
+```
+
+would ensure that the `ubuntu` service is deployed with an `ubuntu:14.04` image.
+
 ## License
 
 GPL version 3
