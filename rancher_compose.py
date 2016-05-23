@@ -20,6 +20,8 @@
 import datetime
 import os.path
 
+
+
 DOCUMENTATION = '''
 ---
 module: rancher_compose
@@ -30,16 +32,16 @@ description:
   - Run the C(rancher-compose) tool
     U(http://docs.rancher.com/rancher/rancher-compose/). Rancher stacks can be
     created, started, reloaded, stopped and removed using this module. The stack
-    to operate on is determined by the C(project) option, and defaults to the
-    directory in which the playbook resides.  Note that for the purposes of this
-    module, the words I(stack) and I(project) are synonymous.
+    to operate on is determined by the C(project_name) option, and defaults to
+    the directory in which the playbook resides.  Note that for the purposes of
+    this module, the words I(stack) and I(project_name) are synonymous.
 options:
   project_dir:
     description:
       - The working directory under which C(rancher-compose) will run
     required: false
     default: The current working directory
-  project:
+  project_name:
     description:
       - The rancher stack to operate on
     required: false
@@ -180,7 +182,7 @@ def main():
     module = AnsibleModule(
         argument_spec = dict(
             project_dir = dict(type='str', default='.'),
-            project = dict(),
+            project_name = dict(),
             docker_compose = dict(),
             rancher_compose = dict(),
             env_file = dict(),
@@ -197,7 +199,7 @@ def main():
 
     # Define the module arguments.
     project_dir = os.path.abspath(module.params['project_dir'])
-    project = module.params['project']
+    project_name = module.params['project_name']
     docker_compose = module.params['docker_compose']
     rancher_compose = module.params['rancher_compose']
     env_file = module.params['env_file']
@@ -211,8 +213,8 @@ def main():
     args = [executable]
     if docker_compose:
         args.extend(['--file', docker_compose])
-    if project:
-        args.extend(['--project-name', project])
+    if project_name:
+        args.extend(['--project-name', project_name])
     if rancher_compose:
         args.extend(['--rancher-file', rancher_compose])
     if env_file:
