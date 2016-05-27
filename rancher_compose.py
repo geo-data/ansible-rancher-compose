@@ -198,7 +198,7 @@ def main():
     )
 
     # Define the module arguments.
-    project_dir = os.path.abspath(module.params['project_dir'])
+    project_dir = os.path.abspath(os.path.expanduser(module.params['project_dir']))
     project_name = module.params['project_name']
     docker_compose = module.params['docker_compose']
     rancher_compose = module.params['rancher_compose']
